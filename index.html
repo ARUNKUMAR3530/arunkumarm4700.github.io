@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Arunkumar M | Java Full Stack Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0d1117;--bg2:#161b22;--bg3:#1f2937;
+  --accent:#f78166;--accent2:#3fb950;--accent3:#58a6ff;
+  --text:#e6edf3;--text2:#8b949e;--border:#30363d;
+  --glow:rgba(247,129,102,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Fira Code',monospace;overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px;}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:linear-gradient(rgba(247,129,102,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(247,129,102,0.03) 1px,transparent 1px);
+  background-size:50px 50px;pointer-events:none;z-index:0;
+}
+
+/* LOADER */
+#loader{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:9999;transition:opacity 0.6s ease;
+}
+.loader-text{font-family:'Syne',sans-serif;font-size:1.2rem;color:var(--accent);letter-spacing:0.3em;animation:pulse 1s ease-in-out infinite;}
+.loader-bar{width:220px;height:2px;background:var(--border);margin-top:20px;border-radius:2px;overflow:hidden;}
+.loader-bar::after{content:'';display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent3));border-radius:2px;animation:load 1.8s ease forwards;}
+@keyframes load{to{width:100%;}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  background:rgba(13,17,23,0.88);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);z-index:100;
+  padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;
+}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:800;color:var(--accent);text-decoration:none;letter-spacing:0.05em;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;transition:color 0.2s;}
+.nav-links a:hover,.nav-links a.active{color:var(--accent);}
+.nav-toggle{display:none;cursor:pointer;flex-direction:column;gap:5px;}
+.nav-toggle span{display:block;width:24px;height:2px;background:var(--text2);}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;align-items:center;padding:80px 2rem 2rem;position:relative;z-index:1;}
+.hero-inner{max-width:1100px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr auto;gap:4rem;align-items:center;}
+.hero-greeting{font-size:0.82rem;color:var(--accent2);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:1rem;opacity:0;animation:fadeUp 0.6s 0.3s forwards;}
+.hero-name{font-family:'Syne',sans-serif;font-size:clamp(2.4rem,6vw,4.5rem);font-weight:800;line-height:1.1;margin-bottom:0.5rem;opacity:0;animation:fadeUp 0.6s 0.5s forwards;}
+.hero-name span{color:var(--accent);}
+.hero-role{font-size:1rem;color:var(--accent3);margin-bottom:1.5rem;opacity:0;animation:fadeUp 0.6s 0.7s forwards;min-height:1.5rem;}
+.cursor{display:inline-block;width:2px;height:1em;background:var(--accent3);margin-left:2px;animation:blink 0.8s step-end infinite;vertical-align:middle;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.hero-bio{font-size:0.88rem;line-height:1.85;color:var(--text2);max-width:580px;margin-bottom:2rem;opacity:0;animation:fadeUp 0.6s 0.9s forwards;}
+.hero-bio em{color:var(--accent);font-style:normal;}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;opacity:0;animation:fadeUp 0.6s 1.1s forwards;}
+.btn{padding:0.65rem 1.5rem;border-radius:6px;font-family:'Fira Code',monospace;font-size:0.8rem;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;letter-spacing:0.05em;display:inline-block;}
+.btn-primary{background:var(--accent);color:#0d1117;font-weight:600;}
+.btn-primary:hover{background:#ff9580;transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--accent3);border:1px solid var(--accent3);}
+.btn-outline:hover{background:rgba(88,166,255,0.1);transform:translateY(-2px);}
+.hero-badges{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:1.5rem;opacity:0;animation:fadeUp 0.6s 1.3s forwards;}
+.badge{padding:0.3rem 0.75rem;background:var(--bg2);border:1px solid var(--border);border-radius:20px;font-size:0.7rem;color:var(--text2);transition:all 0.2s;}
+.badge:hover{border-color:var(--accent);color:var(--accent);}
+
+/* AVATAR */
+.hero-avatar{opacity:0;animation:fadeUp 0.6s 0.6s forwards;}
+.avatar-wrap{
+  width:220px;height:220px;border-radius:50%;
+  padding:3px;position:relative;
+  background:conic-gradient(var(--accent),var(--accent3),var(--accent2),var(--accent));
+  animation:spin-ring 8s linear infinite;
+}
+@keyframes spin-ring{to{transform:rotate(360deg);}}
+.avatar-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:var(--bg2);overflow:hidden;
+  border:4px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:1;
+}
+.avatar-inner img{width:100%;height:100%;object-fit:cover;object-position:top center;}
+.avatar-fallback{font-size:4.5rem;}
+
+/* SECTION BASE */
+section{padding:80px 2rem;position:relative;z-index:1;}
+.container{max-width:1100px;margin:0 auto;}
+.section-header{margin-bottom:3rem;display:flex;align-items:center;gap:1rem;}
+.section-num{font-size:0.75rem;color:var(--accent);letter-spacing:0.2em;white-space:nowrap;font-weight:600;}
+.section-title{font-family:'Syne',sans-serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700;}
+.section-line{flex:1;height:1px;background:linear-gradient(to right,var(--border),transparent);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:3rem;align-items:start;}
+.about-text p{color:var(--text2);line-height:1.9;font-size:0.88rem;margin-bottom:1rem;}
+.about-text p em{color:var(--accent3);font-style:normal;}
+.info-list{display:flex;flex-direction:column;gap:0.85rem;margin-top:1.75rem;}
+.info-item{display:flex;gap:0.75rem;align-items:flex-start;font-size:0.8rem;}
+.info-icon{min-width:22px;font-size:1rem;}
+.info-label{color:var(--text2);}
+.info-val{color:var(--text);}
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;text-align:center;transition:all 0.3s;}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 30px var(--glow);}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);}
+.stat-label{font-size:0.72rem;color:var(--text2);margin-top:0.25rem;}
+.quote-block{border-left:3px solid var(--accent);padding:1rem 1.5rem;margin-top:1.5rem;background:var(--bg2);border-radius:0 8px 8px 0;font-style:italic;color:var(--text2);font-size:0.85rem;line-height:1.7;}
+
+/* SKILLS */
+#skills{background:var(--bg2);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;}
+.skill-card{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:1.75rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),var(--accent3));transform:scaleX(0);transform-origin:left;transition:transform 0.35s;}
+.skill-card:hover::before{transform:scaleX(1);}
+.skill-card:hover{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 15px 50px var(--glow);}
+.skill-icon{font-size:1.6rem;margin-bottom:0.75rem;}
+.skill-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:1rem;}
+.skill-tags{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.skill-tag{padding:0.25rem 0.6rem;background:var(--bg2);border:1px solid var(--border);border-radius:4px;font-size:0.68rem;color:var(--text2);}
+.tools-row{display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:2.5rem;}
+.tool-pill{display:flex;align-items:center;gap:0.5rem;padding:0.45rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:0.78rem;color:var(--text2);transition:all 0.2s;}
+.tool-pill:hover{border-color:var(--accent3);color:var(--accent3);}
+.tool-dot{width:8px;height:8px;border-radius:50%;}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;}
+.project-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:2rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.project-card::after{content:'';position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle at 50% 0%,rgba(247,129,102,0.07),transparent 60%);opacity:0;transition:opacity 0.3s;}
+.project-card:hover::after{opacity:1;}
+.project-card:hover{border-color:var(--accent);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.project-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem;}
+.project-icon{font-size:2rem;}
+.project-links{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.project-link{color:var(--text2);text-decoration:none;font-size:0.72rem;padding:0.3rem 0.65rem;border:1px solid var(--border);border-radius:5px;transition:all 0.2s;display:flex;align-items:center;gap:0.3rem;}
+.project-link:hover{color:var(--accent3);border-color:var(--accent3);}
+.project-live{background:var(--accent)!important;color:#0d1117!important;border-color:var(--accent)!important;font-weight:600;}
+.project-live:hover{background:#ff9580!important;}
+.project-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:0.4rem;}
+.project-status{display:inline-block;padding:0.2rem 0.6rem;background:rgba(63,185,80,0.12);border:1px solid var(--accent2);border-radius:20px;font-size:0.65rem;color:var(--accent2);margin-bottom:0.75rem;}
+.project-desc{font-size:0.83rem;line-height:1.75;color:var(--text2);margin-bottom:1.2rem;}
+.project-features{list-style:none;display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.2rem;}
+.project-features li{font-size:0.78rem;color:var(--text2);display:flex;align-items:flex-start;gap:0.5rem;}
+.project-features li::before{content:'▸';color:var(--accent);flex-shrink:0;}
+.project-stack{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.stack-tag{padding:0.2rem 0.55rem;background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.25);border-radius:4px;font-size:0.68rem;color:var(--accent3);}
+
+/* TIMELINE */
+#education{background:var(--bg2);}
+.timeline{position:relative;padding-left:2rem;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),var(--accent3),transparent);}
+.timeline-item{position:relative;margin-bottom:2.75rem;opacity:0;transform:translateX(-20px);transition:all 0.55s;}
+.timeline-item.visible{opacity:1;transform:translateX(0);}
+.timeline-dot{position:absolute;left:-2.4rem;top:0.3rem;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid var(--bg2);box-shadow:0 0 12px var(--accent);}
+.timeline-date{font-size:0.7rem;color:var(--accent);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:0.4rem;}
+.timeline-title{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:0.25rem;}
+.timeline-org{font-size:0.82rem;color:var(--accent3);margin-bottom:0.6rem;}
+.timeline-desc{font-size:0.82rem;color:var(--text2);line-height:1.75;}
+
+/* STRENGTHS */
+.strengths-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;}
+.strength-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:1.5rem;transition:all 0.3s;text-align:center;}
+.strength-card:hover{border-color:var(--accent2);transform:translateY(-3px);box-shadow:0 8px 30px rgba(63,185,80,0.1);}
+.strength-icon{font-size:1.8rem;margin-bottom:0.75rem;}
+.strength-title{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.5rem;}
+.strength-desc{font-size:0.78rem;color:var(--text2);line-height:1.6;}
+
+/* CONTACT */
+#contact{text-align:center;}
+.availability{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 1.25rem;background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.3);border-radius:20px;font-size:0.78rem;color:var(--accent2);margin-bottom:1.5rem;}
+.avail-dot{width:8px;height:8px;border-radius:50%;background:var(--accent2);animation:pdot 2s ease-in-out infinite;}
+@keyframes pdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(1.4);}}
+.contact-tagline{font-size:0.88rem;color:var(--text2);max-width:500px;margin:0 auto 2.5rem;line-height:1.8;}
+.contact-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:1rem;margin-bottom:2.5rem;}
+.contact-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:1.5rem 1.75rem;text-decoration:none;transition:all 0.3s;min-width:180px;color:inherit;}
+.contact-card:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 10px 40px var(--glow);}
+.contact-icon{font-size:1.4rem;margin-bottom:0.5rem;}
+.contact-label{font-size:0.68rem;color:var(--text2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.3rem;}
+.contact-val{font-size:0.78rem;color:var(--text);}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center;font-size:0.75rem;color:var(--text2);position:relative;z-index:1;}
+footer span{color:var(--accent);}
+footer p+p{margin-top:0.5rem;}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.reveal{opacity:0;transform:translateY(28px);transition:all 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .hero-inner{grid-template-columns:1fr;text-align:center;}
+  .hero-avatar{order:-1;display:flex;justify-content:center;}
+  .avatar-wrap{width:160px;height:160px;}
+  .hero-btns{justify-content:center;}
+  .hero-badges{justify-content:center;}
+  .about-grid{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .nav-links{display:none;}
+  .nav-toggle{display:flex;}
+  .nav-links.open{display:flex;flex-direction:column;position:absolute;top:60px;left:0;right:0;background:var(--bg2);border-bottom:1px solid var(--border);padding:1rem;gap:1rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-text">ARUNKUMAR.DEV</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">&lt;Arun /&gt;</a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-toggle" id="navToggle"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-inner container">
+    <div class="hero-text">
+      <div class="hero-greeting">// Hello, World! 👋</div>
+      <h1 class="hero-name">Arunkumar <span>M</span></h1>
+      <div class="hero-role"><span id="typed"></span><span class="cursor"></span></div>
+      <p class="hero-bio">
+        Aspiring <em>Java Full Stack Developer</em> from Tamil Nadu, India 🇮🇳 —
+        passionate about building production-ready applications, clean code, and solving
+        real-world problems. Currently pursuing B.Tech IT &amp; training at Q-Spiders.
+      </p>
+      <div class="hero-btns">
+        <a href="#projects" class="btn btn-primary">🚀 View Projects</a>
+        <a href="mailto:m.arunkumar4700@gmail.com" class="btn btn-outline">📬 Contact Me</a>
+      </div>
+      <div class="hero-badges">
+        <span class="badge">☕ Java</span>
+        <span class="badge">🌐 HTML · CSS · JS</span>
+        <span class="badge">🗄️ MySQL</span>
+        <span class="badge">🐙 Git & GitHub</span>
+        <span class="badge">🚀 Vercel</span>
+        <span class="badge">🐳 Docker</span>
+        <span class="badge">🧪 Manual Testing</span>
+      </div>
+    </div>
+    <div class="hero-avatar">
+      <div class="avatar-wrap">
+        <div class="avatar-inner">
+          <img src="Arun_M.jpg" alt="Arunkumar M"
+               onerror="this.style.display='none';document.getElementById('av-fb').style.display='flex'"/>
+          <div id="av-fb" class="avatar-fallback" style="display:none">👨‍💻</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">01.</span>
+      <h2 class="section-title">About Me</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm <em>Arunkumar M</em>, an aspiring Full Stack / Backend Developer with a strong foundation in <em>Core Java</em>, Web Technologies, and SQL. I'm currently pursuing my B.Tech in Information Technology at Salem College of Engineering and Technology.</p>
+        <p>What sets me apart is my ability to take projects from concept to <em>production deployment</em>. I recently built and deployed a live GPS-Based Complaint Redressal System handling 100+ concurrent users — complete with CI/CD pipeline on Vercel.</p>
+        <p>I'm a quick learner with a deep commitment to writing <em>clean, maintainable code</em> and following best practices. I thrive on problem-solving and continuously push myself to learn new technologies.</p>
+        <div class="info-list">
+          <div class="info-item"><span class="info-icon">🎓</span><span class="info-label">College:&nbsp;</span><span class="info-val">Salem College of Engineering &amp; Technology, Salem</span></div>
+          <div class="info-item"><span class="info-icon">📅</span><span class="info-label">Graduation:&nbsp;</span><span class="info-val">Expected June 2026</span></div>
+          <div class="info-item"><span class="info-icon">📍</span><span class="info-label">Location:&nbsp;</span><span class="info-val">Pudukkottai, Tamil Nadu, India</span></div>
+          <div class="info-item"><span class="info-icon">📚</span><span class="info-label">Training:&nbsp;</span><span class="info-val">Q-Spiders — Java, Web Tech, SQL, Manual Testing</span></div>
+          <div class="info-item"><span class="info-icon">🗣️</span><span class="info-label">Languages:&nbsp;</span><span class="info-val">Tamil 🇮🇳 (Native) · English 🇬🇧 (Professional)</span></div>
+          <div class="info-item"><span class="info-icon">📧</span><span class="info-label">Email:&nbsp;</span><span class="info-val">m.arunkumar4700@gmail.com</span></div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num">1+</div><div class="stat-label">Live Deployed Project</div></div>
+          <div class="stat-card"><div class="stat-num">5+</div><div class="stat-label">Tech Skills</div></div>
+          <div class="stat-card"><div class="stat-num">100+</div><div class="stat-label">Concurrent Users</div></div>
+          <div class="stat-card"><div class="stat-num">2026</div><div class="stat-label">Graduation Year</div></div>
+        </div>
+        <div class="quote-block">"When you strive for something, the whole world will support you."</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">02.</span>
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-icon">☕</div>
+        <div class="skill-title">Core Java</div>
+        <div class="skill-tags">
+          <span class="skill-tag">OOP</span><span class="skill-tag">Inheritance</span><span class="skill-tag">Polymorphism</span>
+          <span class="skill-tag">Encapsulation</span><span class="skill-tag">Abstraction</span><span class="skill-tag">Interfaces</span>
+          <span class="skill-tag">Collections</span><span class="skill-tag">ArrayList</span><span class="skill-tag">HashMap</span>
+          <span class="skill-tag">Exception Handling</span><span class="skill-tag">Multithreading</span><span class="skill-tag">File I/O</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🌐</div>
+        <div class="skill-title">Web Technologies</div>
+        <div class="skill-tags">
+          <span class="skill-tag">HTML5</span><span class="skill-tag">CSS3</span><span class="skill-tag">JavaScript</span>
+          <span class="skill-tag">ES6+</span><span class="skill-tag">DOM Manipulation</span><span class="skill-tag">Async/Await</span>
+          <span class="skill-tag">Promises</span><span class="skill-tag">Flexbox</span><span class="skill-tag">CSS Grid</span>
+          <span class="skill-tag">Bootstrap</span><span class="skill-tag">Responsive Design</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🗄️</div>
+        <div class="skill-title">Database (SQL)</div>
+        <div class="skill-tags">
+          <span class="skill-tag">MySQL</span><span class="skill-tag">JDBC</span><span class="skill-tag">DDL / DML</span>
+          <span class="skill-tag">Joins</span><span class="skill-tag">Subqueries</span><span class="skill-tag">GROUP BY</span>
+          <span class="skill-tag">Normalization</span><span class="skill-tag">Primary Keys</span><span class="skill-tag">Foreign Keys</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🛠️</div>
+        <div class="skill-title">DevOps & Tools</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Git</span><span class="skill-tag">GitHub</span><span class="skill-tag">Vercel</span>
+          <span class="skill-tag">Docker (basics)</span><span class="skill-tag">CI/CD Pipelines</span>
+          <span class="skill-tag">VS Code</span><span class="skill-tag">Linux</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🧪</div>
+        <div class="skill-title">Manual Testing</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Test Case Design</span><span class="skill-tag">Defect Reporting</span>
+          <span class="skill-tag">Regression Testing</span><span class="skill-tag">SDLC</span>
+          <span class="skill-tag">Defect Lifecycle</span><span class="skill-tag">QA Methodologies</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-icon">🧩</div>
+        <div class="skill-title">Problem Solving</div>
+        <div class="skill-tags">
+          <span class="skill-tag">Data Structures</span><span class="skill-tag">Algorithms</span>
+          <span class="skill-tag">Logical Thinking</span><span class="skill-tag">String Manipulation</span>
+          <span class="skill-tag">Regex</span><span class="skill-tag">Analytical Skills</span>
+        </div>
+      </div>
+    </div>
+    <div class="tools-row reveal">
+      <div class="tool-pill"><div class="tool-dot" style="background:#ED8B00"></div>Java</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#E34F26"></div>HTML5</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#1572B6"></div>CSS3</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#F7DF1E"></div>JavaScript</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#4479A1"></div>MySQL</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#F05032"></div>Git</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#6e5494"></div>GitHub</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#ffffff"></div>Vercel</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#2496ED"></div>Docker</div>
+      <div class="tool-pill"><div class="tool-dot" style="background:#7952B3"></div>Bootstrap</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">03.</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-header">
+          <div class="project-icon">🗺️</div>
+          <div class="project-links">
+            <a href="https://gps-based-complaint-redressal-syste.vercel.app" target="_blank" class="project-link project-live">🔗 Live Demo</a>
+            <a href="https://github.com/arunkumarm4700" target="_blank" class="project-link">⌥ GitHub</a>
+          </div>
+        </div>
+        <div class="project-title">GPS-Based Complaint Redressal System</div>
+        <span class="project-status">✅ Live &amp; Deployed</span>
+        <p class="project-desc">A full-stack civic tech web app enabling citizens to report and track civic complaints with real-time GPS location mapping and a complete complaint lifecycle.</p>
+        <ul class="project-features">
+          <li>Complete complaint lifecycle: Registration → Admin Review → Status Tracking → Resolution</li>
+          <li>Secure MySQL database with JDBC, handles 100+ concurrent submissions</li>
+          <li>Responsive UI with HTML5, CSS3, JavaScript; Java backend</li>
+          <li>Deployed on Vercel with automated CI/CD pipeline</li>
+        </ul>
+        <div class="project-stack">
+          <span class="stack-tag">Java</span><span class="stack-tag">HTML5</span><span class="stack-tag">CSS3</span>
+          <span class="stack-tag">JavaScript</span><span class="stack-tag">MySQL</span><span class="stack-tag">JDBC</span><span class="stack-tag">Vercel</span>
+        </div>
+      </div>
+      <div class="project-card reveal" style="border-style:dashed;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:300px;opacity:0.65;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">🚧</div>
+        <div class="project-title" style="color:var(--text2)">More Projects Coming Soon</div>
+        <p style="font-size:0.8rem;color:var(--text2);margin-top:0.5rem;line-height:1.6">Currently building more projects. Stay tuned!</p>
+        <a href="https://github.com/arunkumarm4700" target="_blank" class="btn btn-outline" style="margin-top:1.5rem;font-size:0.75rem;">⭐ Follow on GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EDUCATION ══ -->
+<section id="education">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">04.</span>
+      <h2 class="section-title">Education &amp; Training</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">2022 — June 2026 (Expected)</div>
+        <div class="timeline-title">B.Tech in Information Technology</div>
+        <div class="timeline-org">🏫 Salem College of Engineering and Technology, Salem</div>
+        <div class="timeline-desc">Pursuing a Bachelor's degree in IT with focus on software development, data structures, algorithms, database systems, and web technologies.</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-dot" style="background:var(--accent3);box-shadow:0 0 12px var(--accent3)"></div>
+        <div class="timeline-date">In Progress</div>
+        <div class="timeline-title">Full Stack Java Developer Training</div>
+        <div class="timeline-org">🏢 Q-Spiders Training Institute</div>
+        <div class="timeline-desc">
+          Intensive training covering <strong style="color:var(--text)">Core Java</strong> (OOP, Collections, Exception Handling),
+          <strong style="color:var(--text)">Web Technology</strong> (HTML5, CSS3, JavaScript, responsive design),
+          <strong style="color:var(--text)">Database Management</strong> (SQL, query optimization, database design principles), and
+          <strong style="color:var(--text)">Manual Testing</strong> (SDLC, test case creation, defect lifecycle, QA methodologies).
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STRENGTHS ══ -->
+<section id="strengths">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-num">05.</span>
+      <h2 class="section-title">Key Strengths</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="strengths-grid">
+      <div class="strength-card reveal"><div class="strength-icon">🏗️</div><div class="strength-title">Production-Ready</div><div class="strength-desc">Hands-on experience building and deploying real-world applications end-to-end.</div></div>
+      <div class="strength-card reveal"><div class="strength-icon">⚡</div><div class="strength-title">Quick Learner</div><div class="strength-desc">Proven ability to rapidly adopt new technologies and deliver working solutions fast.</div></div>
+      <div class="strength-card reveal"><div class="strength-icon">🔍</div><div class="strength-title">Problem Solver</div><div class="strength-desc">Excellent analytical skills and logical thinking with sharp attention to detail.</div></div>
+      <div class="strength-card reveal"><div class="strength-icon">✨</div><div class="strength-title">Clean Code</div><div class="strength-desc">Committed to maintainable, efficient code following industry best practices.</div></div>
+      <div class="strength-card reveal"><div class="strength-icon">📈</div><div class="strength-title">Continuous Learner</div><div class="strength-desc">Self-motivated with strong dedication to constant skill development and growth.</div></div>
+      <div class="strength-card reveal"><div class="strength-icon">🤝</div><div class="strength-title">Team Player</div><div class="strength-desc">Collaborative and supportive, always ready to contribute to team success.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal" style="justify-content:center">
+      <span class="section-num">06.</span>
+      <h2 class="section-title">Get In Touch</h2>
+      <div class="section-line"></div>
+    </div>
+    <div style="margin-bottom:1.5rem;" class="reveal">
+      <div class="availability"><div class="avail-dot"></div>Available for internships &amp; collaborations</div>
+    </div>
+    <p class="contact-tagline reveal">
+      I'm looking to collaborate on web, backend, and full-stack application projects.
+      Drop me a message — I'd love to connect! 🚀
+    </p>
+    <div class="contact-grid reveal">
+      <a href="mailto:m.arunkumar4700@gmail.com" class="contact-card">
+        <div class="contact-icon">📧</div><div class="contact-label">Email</div><div class="contact-val">m.arunkumar4700@gmail.com</div>
+      </a>
+      <a href="https://github.com/arunkumarm4700" target="_blank" class="contact-card">
+        <div class="contact-icon">🐙</div><div class="contact-label">GitHub</div><div class="contact-val">github.com/arunkumarm4700</div>
+      </a>
+      <a href="https://www.linkedin.com/in/arunkumarm4700" target="_blank" class="contact-card">
+        <div class="contact-icon">💼</div><div class="contact-label">LinkedIn</div><div class="contact-val">linkedin.com/in/arunkumarm4700</div>
+      </a>
+      <a href="tel:+919360095701" class="contact-card">
+        <div class="contact-icon">📱</div><div class="contact-label">Phone</div><div class="contact-val">+91 93600 95701</div>
+      </a>
+    </div>
+    <div class="reveal">
+      <a href="mailto:m.arunkumar4700@gmail.com" class="btn btn-primary" style="font-size:0.9rem;padding:0.85rem 2.5rem;">📬 Say Hello!</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>Designed &amp; Built with <span>❤️</span> by <span>Arunkumar M</span></p>
+  <p style="margin-top:0.5rem;font-style:italic;">"The only thing I know is that we have to be kind, especially when we don't know what's going on."</p>
+  <p style="margin-top:0.75rem;">Show some <span>❤️</span> by starring ⭐ repositories on <a href="https://github.com/arunkumarm4700" target="_blank" style="color:var(--accent3);text-decoration:none;">GitHub</a>!</p>
+</footer>
+
+<script>
+// Loader hide
+window.addEventListener('load',()=>{
+  setTimeout(()=>{
+    const l=document.getElementById('loader');
+    l.style.opacity='0';
+    setTimeout(()=>l.style.display='none',600);
+  },1800);
+});
+
+// Nav toggle
+document.getElementById('navToggle').addEventListener('click',()=>{
+  document.getElementById('navLinks').classList.toggle('open');
+});
+
+// Typed text
+const roles=['Java Developer 💻','Full Stack Developer 🌐','Backend Engineer ⚙️','Problem Solver 🧩','Clean Code Advocate ✨'];
+let ri=0,ci=0,del=false;
+const tel=document.getElementById('typed');
+function type(){
+  const r=roles[ri];
+  if(!del){tel.textContent=r.substring(0,ci+1);ci++;if(ci===r.length){del=true;setTimeout(type,1800);return;}}
+  else{tel.textContent=r.substring(0,ci-1);ci--;if(ci===0){del=false;ri=(ri+1)%roles.length;}}
+  setTimeout(type,del?50:85);
+}
+setTimeout(type,1500);
+
+// Scroll reveal
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.timeline-item').forEach(el=>obs.observe(el));
+
+// Active nav
+const secs=document.querySelectorAll('section[id]');
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(s=>{if(window.scrollY>=s.offsetTop-80)cur=s.getAttribute('id');});
+  document.querySelectorAll('.nav-links a').forEach(a=>{
+    a.classList.toggle('active',a.getAttribute('href')==='#'+cur);
+  });
+});
+</script>
+</body>
+</html>
